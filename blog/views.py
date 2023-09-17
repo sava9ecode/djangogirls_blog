@@ -1,7 +1,9 @@
 from django.shortcuts import render
 
-from django.http import HttpResponse
+from .models import Post
 
 
-def index(request):
-    return HttpResponse('My simple-bimple blog')
+def post_list(request):
+    all_posts = Post.objects.all()
+    context = {"all_posts": all_posts}
+    return render(request, "blog/post_list.html", context)
