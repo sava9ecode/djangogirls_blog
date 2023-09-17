@@ -2,23 +2,24 @@
 
 
 {% block content %}
-    <h1><a href="">Django Girls Blog</a></h1>
 
-    <p>Welcome to <em>My Blog</em> - a simple Django web app.</p>
+    <div>
+        <h1><a href="">Django Girls Blog</a></h1>
+    </div>
 
-    {% if all_posts %}
+    {% if posts %}
 
-        {% for post in all_posts %}
-            <h2 href="">{{ post.title }}</h2>
-
-            <p>{{ post.text }}</p>
-
-            <p><strong>Author: </strong><a href="">{{ post.author }}</a></p>
-            <p><strong>Published: </strong>{% if post.published_date %}{{ post.published_date }}{% else %}Date is undercover.{% endif %}</p>
+        {% for post in posts %}
+            <div>
+                <p>published: {{ post.published_date }}</p>
+                <h2 href="">{{ post.title }}</h2>
+                <p>{{ post.text|linebreaksbr }}</p>
+            </div>
         {% endfor %}
 
     {% else %}
     <p>There are no posts yet.</p>
-
+    
     {% endif %}
+
 {% endblock %}
