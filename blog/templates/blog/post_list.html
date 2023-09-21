@@ -3,17 +3,20 @@
 {% block content %}
 
     {% if posts %}
+
         {% for post in posts %}
             <div class="post">
-                <div class="date">
-                    <p>Published: {{ post.published_date }}</p>
-                </div>
                 <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
                 <p>{{ post.text|linebreaksbr }}</p>
+                <div>(<small>Author: {{ post.author }}</small>)</div>
+                <div class="date">Published: {{ post.published_date }}</div>
+                <a href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
             </div>
         {% endfor %}
+
     {% else %}
-    <p>There are no posts yet.</p>
+        <p>There are no posts yet.</p>
+        
     {% endif %}
 
 {% endblock %}

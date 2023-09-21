@@ -3,21 +3,71 @@
 {% block content %}
 
     <div class="post">
-        {% if user.is_authenticated %}
+
+        {% if post.author == user %}
+
             {% if post.published_date %}
-                <div class="date">
-                    {{ post.published_date }}
-                </div>
                 <a href="{% url 'post_unpublish' pk=post.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span></a>
             {% else %}
                 <a href="{% url 'post_publish' pk=post.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-send"></span></a>
             {% endif %}
+
             <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
             <a href="{% url 'post_remove' pk=post.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
         {% endif %}
 
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaksbr }}</p>
+
+        <div>(<small>Author: {{ post.author }}</small>)</div>
+
+        {% if post.published_date %}
+            <div class="date">{{ post.published_date }}</div>
+        {% endif %}
+
     </div>
+
+    <hr>
+
+    <a href="{% url 'add_comment_to_post' pk=post.pk %}" class="btn btn-default">Add comment</a>
+
+    {% for comment in post.comments.all %}
+
+        {% if user.is_authenticated or comment.approved_comment %}
+
+            <div>
+                {% if comment.author == user.username %}
+
+                    {% if comment.approved_comment %}
+                        <a href="{% url 'comment_unapprove' pk=comment.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span></a>
+                    {% else %}
+                        <a href="{% url 'comment_approve' pk=comment.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></a>
+                    {% endif %}
+
+                    <a href="{% url 'comment_edit' pk=comment.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="{% url 'comment_remove' pk=comment.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+                {% elif comment.post.author.username == user.username %}
+                    <a href="{% url 'comment_remove' pk=comment.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+                {% endif %}
+            </div>
+
+            <div class="comment">
+                {% if comment.approved_comment or comment.author == user.username %}
+                    <p>{{ comment.text|linebreaks }}</p>
+                    
+                    <div>
+                        (Author: <small>{{ comment.author }}</small>)
+                    </div>
+
+                    <div class="date">{{ comment.created_date }}</div>
+                {% endif %}
+            </div>
+
+        {% endif %}
+
+    {% empty %}
+        <p>No comments here yet.</p>
+        
+    {% endfor %}
 
 {% endblock %}
