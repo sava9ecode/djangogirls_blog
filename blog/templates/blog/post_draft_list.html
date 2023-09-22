@@ -10,6 +10,7 @@
                 <p>{{ post.text|truncatechars:200 }}</p>
                 <div>(<small>Author: {{ post.author.username }}</small>)</div>
                 <div class="date">Created: {{ post.created_date|date:"d-m-Y" }}</div>
+                <a href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.comments.count }}</a>
             </div>
         {% endfor %}
 
