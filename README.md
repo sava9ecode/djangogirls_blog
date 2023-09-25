@@ -17,6 +17,12 @@ In a python virtual environment, run:
 python manage.py runserver
 ```
 Now, you are good to go. Your blog is ready.
+## Docker
+To spin up the application using docker, ensure that Docker is installed. Then run:
+```
+sudo docker compose up -d --build
+```
+The application will be live at 0.0.0.0:8000
 ## Blog entry
 * Log in
 * Click on the `+` button, enter the title and text
