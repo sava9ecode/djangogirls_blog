@@ -19,11 +19,18 @@ from django.contrib.auth import views
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 urlpatterns = [
     path("", include("blog.urls")),
-    path("admin/", admin.site.urls),
+    path(f"{env('SECRET_ADMIN_URL')}/admin/", admin.site.urls),
     path("accounts/login/", views.LoginView.as_view(), name="login"),
     path("accounts/logout/", views.LogoutView.as_view(next_page="/"), name="logout"),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

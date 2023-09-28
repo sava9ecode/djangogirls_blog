@@ -37,18 +37,6 @@
 
         {% if user.is_authenticated or comment.approved_comment %}
 
-            <div class="comment">
-                {% if comment.approved_comment or comment.author == user.username %}
-                    <p>{{ comment.text|linebreaks }}</p>
-                    
-                    <div>
-                        (Author: <small>{{ comment.author }}</small>)
-                    </div>
-
-                    <div class="date">{{ comment.created_date }}</div>
-                {% endif %}
-            </div>
-
             <div class="buttons">
                 {% if comment.author == user.username %}
 
@@ -60,8 +48,17 @@
 
                     <a href="{% url 'comment_edit' pk=comment.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
                     <a href="{% url 'comment_remove' pk=comment.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
-                {% elif comment.post.author.username == user.username %}
+                {% elif comment.approved_comment and comment.post.author.username == user.username %}
                     <a href="{% url 'comment_remove' pk=comment.pk %}" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span></a>
+                {% endif %}
+            </div>
+
+            <div class="comment">
+                {% if comment.approved_comment or comment.author == user.username %}
+                    <p>{{ comment.text|linebreaks }}</p>
+
+                    <div>Author: {{ comment.author }}</div>
+                    <div class="date">Date: {{ comment.created_date }}</div>
                 {% endif %}
             </div>
 

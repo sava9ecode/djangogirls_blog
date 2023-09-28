@@ -10,23 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
+import environ
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+env = environ.Env()
+environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".env"))
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-$qjg)61c&-2=^cu$+@uy++@^y*w3&lmgcy--ifnij=p2zp=x1b"
+SECRET_KEY = env(
+    "SECRET_KEY",
+    default="django-insecure-$qjg)61c&-2=^cu$+@uy++@^y*w3&lmgcy--ifnij=p2zp=x1b",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", default=True)
 
-ALLOWED_HOSTS = ["127.0.0.1", ".pythonanywhere.com"]
-
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["127.0.0.1", ".pythonanywhere"])
 
 # Application definition
 
@@ -71,18 +78,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "mysite.wsgi.application"
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "db",  # set in docker-compose.yml
-        "PORT": 5432,  # default postgres port
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -100,6 +95,25 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+DATABASES = {
+    "default": {
+        "ENGINE": env("DB_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": env("DB_NAME", default=f"{BASE_DIR}/db.sqlite3"),
+        "USER": env("DB_USER", default="postgres"),
+        "PASSWORD": env("DB_PASSWORD", default="postgres"),
+        "HOST": env("DB_HOST", default="localhost"),  # set in docker-compose.yml
+        "PORT": env("DB_PORT", default="5432"),  # default postgres port
+    }
+}
 
 
 # Internationalization

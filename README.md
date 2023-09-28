@@ -3,27 +3,38 @@ This repository contains the code and some of my changes that one would eventual
 ## Differences
 Expressing my authorial rights, some things are a bit different from the tutorial:
 * Templates are a little bit different
-* Button for delete all comments in your own posts
-* Button for hide your own comments
-* Button for edit your own comments before approve
-* Maybe something else =)
+* Button for delete all comments in your post
+* Button for hide your comments
+* Button for edit your comments before approve
+* Some logicaly/html changes
 ## Setup
 In a python virtual environment, run:
-* `pip install -r requirements.txt`
-* `python manage.py migrate blog`
+* `pip3 install -r requirements/dev.txt`
+* `cp .env.template .env` (copy virtual environment variables to .env and write out them)
+* `python manage.py migrate`
 * `python manage.py createsuperuser` (to create user that you'll use to log in)
-## Run the application
+## Before run the application
+* Create file called `.env`
+* Copy `.env.template` to `.env`
+* Fill out `.env` file
+If you're going to start the app with Docker, fill out all fields. Otherways fill out only `SECRET_ADMIN_URL` field.
+## Run the application localy with db sqlite3
 ```
 python manage.py runserver
 ```
 Now, you are good to go. Your blog is ready.
+## Run the application with gunicorn
+```
+gunicorn mysite.wsgi -b 127.0.0.1:8000
+```
+That's it.
 ## Docker
 To spin up the application using docker, ensure that Docker is installed. Then run:
 ```
 sudo docker compose up -d --build
 ```
-The application will be live at 0.0.0.0:8000
+The application will be live at 127.0.0.1:8000
 ## Blog entry
-* Log in
+* Log in (with your super user credentials)
 * Click on the `+` button, enter the title and text
-* Finally hit the `Save` button
+* Finally hit the `paper plane` button
